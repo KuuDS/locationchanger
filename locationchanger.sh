@@ -29,7 +29,11 @@ if [ "$ID" == "root" ]; then
     exit 1;
 fi
 
-SSID=`networksetup -listallhardwareports | sed -n '/Wi-Fi/{n;p;}' | sed 's/[^:]*: //' | xargs networksetup -getairportnetwork | sed 's/[^:]*: //'`
+# https://www.reddit.com/r/MacOS/comments/1ktm5bw/finding_the_ssid_from_the_cli_on_macos_15/
+sudo  ipconfig setverbose 1
+
+#SSID=`networksetup -listallhardwareports | sed -n '/Wi-Fi/{n;p;}' | sed 's/[^:]*: //' | xargs networksetup -getairportnetwork | sed 's/[^:]*: //'`
+SSID=`networksetup -listallhardwareports | sed -n '/Wi-Fi/{n;p;}' | sed 's/[^:]*: //' | xargs /usr/sbin/ipconfig getsummary en0 | awk -F' : ' '/ SSID/ { print $2 }'`
 LOCATION_NAMES=`networksetup -listlocations`
 CURRENT_LOCATION=`networksetup -getcurrentlocation`
 
